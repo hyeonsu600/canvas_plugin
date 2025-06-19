@@ -1,0 +1,22 @@
+export default ImageOptionsForm;
+declare function ImageOptionsForm({ imageSize, displayAs, isDecorativeImage, altText, isLinked, dimensionsState, handleAltTextChange, handleIsDecorativeChange, handleDisplayAsChange, handleImageSizeChange, messagesForSize, hideDimensions, id, isIconMaker, forBlockEditorUse, altHasError, altRef, dimensionsRef }: {
+    imageSize: any;
+    displayAs: any;
+    isDecorativeImage: any;
+    altText: any;
+    isLinked: any;
+    dimensionsState: any;
+    handleAltTextChange: any;
+    handleIsDecorativeChange: any;
+    handleDisplayAsChange: any;
+    handleImageSizeChange: any;
+    messagesForSize: any;
+    hideDimensions: any;
+    id?: string | undefined;
+    isIconMaker?: boolean | undefined;
+    forBlockEditorUse?: boolean | undefined;
+    altHasError?: boolean | undefined;
+    altRef?: null | undefined;
+    dimensionsRef?: null | undefined;
+}): React.JSX.Element;
+import React from 'react';

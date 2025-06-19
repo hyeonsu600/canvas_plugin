@@ -1,0 +1,11 @@
+import { Editor } from 'tinymce';
+export declare const IGNORE_WORDCOUNT_ATTRIBUTE = "data-ignore-wordcount";
+export type Scope = 'body' | 'selection';
+export type Category = 'words' | 'chars-no-spaces' | 'chars';
+export declare const countWords: (node: Element) => number;
+export declare const countCharsNoSpaces: (node: Element) => number;
+export declare const countChars: (node: Element) => number;
+export declare const callbackForCategory: (category: Category) => ((node: Element) => number);
+export declare const countShouldIgnore: (ed: Editor, scope: Scope, category: Category) => number;
+export declare const getTinymceCount: (ed: Editor, scope: Scope, category: Category) => number;
+export declare const countContent: (ed: Editor, scope: Scope, category: Category) => number;

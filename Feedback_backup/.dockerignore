@@ -1,0 +1,25 @@
+# .dockerignore for Feedback App
+
+# Git
+.git
+.gitignore
+
+# Dependencies
+node_modules
+
+# Build artifacts
+.next
+dist
+build
+
+# Local environment
+.env.local
+.env*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Other
+README.md 

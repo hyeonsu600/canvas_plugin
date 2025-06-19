@@ -1,0 +1,40 @@
+export const defaultState: {
+    type: string;
+    alt: string;
+    isDecorative: boolean;
+    shape: string;
+    size: string;
+    color: null;
+    outlineColor: string;
+    outlineSize: string;
+    text: string;
+    textSize: string;
+    textColor: string;
+    textBackgroundColor: null;
+    textPosition: string;
+    externalStyle: null;
+    externalWidth: null;
+    externalHeight: null;
+    x: number;
+    y: number;
+    translateX: number;
+    translateY: number;
+    width: number;
+    height: number;
+    transform: string;
+    imageSettings: null;
+    embedImage: null;
+    error: null;
+};
+export namespace actions {
+    let SET_IMAGE_SETTINGS: string;
+    let SET_EMBED_IMAGE: string;
+    let SET_X: string;
+    let SET_Y: string;
+    let SET_TRANSLATE_X: string;
+    let SET_TRANSLATE_Y: string;
+    let SET_WIDTH: string;
+    let SET_HEIGHT: string;
+    let SET_ERROR: string;
+}
+export function svgSettings(state: any, action: any): any;
