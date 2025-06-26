@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 
+// 환경변수에서 Canvas LMS URL 가져오기
+const canvasLmsUrl = process.env.CANVAS_LMS_URL || 'http://localhost:3000';
+
 const client = jwksClient({
-  jwksUri: `http://localhost:3000/api/lti/security/jwks`,
+  jwksUri: `${canvasLmsUrl}/api/lti/security/jwks`,
 });
 
 function getKey(header, callback) {
@@ -33,6 +36,8 @@ export default async function handler(req, res) {
   try {
     const { id_token } = req.body || req.query;
 
+    console.log('🔧 현재 Canvas LMS URL:', canvasLmsUrl);
+
     // **개발 모드**: id_token 이 없다면 그냥 UI를 띄워준다
     if (!id_token) {
       console.warn('⚠️ Dev fallback: no id_token, skipping validation');
@@ -45,7 +50,7 @@ export default async function handler(req, res) {
       jwt.verify(id_token, getKey, { 
         algorithms: ['RS256'],
         audience: process.env.LTI_CLIENT_ID,
-        issuer: 'http://localhost:3000'
+        issuer: canvasLmsUrl
        }, (err, decoded) => {
         if (err) {
           console.error("Token verification failed:", err);
