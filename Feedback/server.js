@@ -48,10 +48,7 @@ const port = process.env.PORT || 3002;
 app.prepare().then(() => {
   // HTTP 서버로 변경 (SSL 인증서 파일 불필요)
   const server = createServer((req, res) => {
-    // Canvas iframe에서 로드될 수 있도록 헤더 설정
-    res.setHeader('X-Frame-Options', 'ALLOWALL');
-    res.setHeader('Content-Security-Policy', 'frame-ancestors *');
-    
+    // 헤더 설정은 next.config.mjs에서 처리
     const parsedUrl = parse(req.url, true);
     handle(req, res, parsedUrl);
   });
