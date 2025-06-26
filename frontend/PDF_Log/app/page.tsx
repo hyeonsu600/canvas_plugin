@@ -46,7 +46,7 @@ export default function Home() {
   const [currentFileIndex, setCurrentFileIndex] = useState(0)
   const [currentPage, setCurrentPage] = useState(0) // 0은 전체 요약, 1부터는 실제 페이지
   const selectedFile = sampleFiles[currentFileIndex]
-  const pdfContainerRef = useRef<HTMLDivElement>(null)
+  const pdfContainerRef = useRef<HTMLDivElement | null>(null)
 
   // 스크롤 이벤트 처리
   useEffect(() => {

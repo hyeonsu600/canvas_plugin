@@ -14,7 +14,7 @@ type File = {
 type PDFViewerProps = {
   file: File
   currentPage: number
-  containerRef: RefObject<HTMLDivElement>
+  containerRef: RefObject<HTMLDivElement | null>
 }
 
 export function PDFViewer({ file, currentPage, containerRef }: PDFViewerProps) {

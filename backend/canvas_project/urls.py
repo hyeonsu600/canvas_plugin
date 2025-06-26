@@ -19,6 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('lms_plugin.urls')),
     # API endpoints 추가 
     #path('api/plugin/', include('lms_plugin.urls')),
 ]
