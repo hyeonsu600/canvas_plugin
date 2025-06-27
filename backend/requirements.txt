@@ -1,0 +1,8 @@
+Django>=4.2
+djangorestframework
+django-cors-headers
+python-dotenv 
+requests 
+pdfplumber 
+ffmpeg-python 
+webvtt-py
