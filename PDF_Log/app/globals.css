@@ -1,6 +1,7 @@
-@tailwind base;
+/* Tailwind 임시 비활성화 - 서버 오류 해결용 */
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -84,6 +85,8 @@ body {
   }
 }
 
+/* Tailwind @apply 지시어도 임시 비활성화 */
+/*
 @layer base {
   * {
     @apply border-border;
@@ -91,4 +94,15 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+*/
+
+/* 기본 스타일로 대체 */
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
