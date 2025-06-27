@@ -8,7 +8,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 // LTI Credentials (Canvas에서 한 번 발급받은 고정값)
 const LTI_CONFIG = {
-  CLIENT_ID: '10000000000002',  // PDF_Log용 새로운 Client ID (Canvas에서 발급 예정)
+  CLIENT_ID: '10000000000005',  // PDF_Log용 Client ID
   CLIENT_SECRET: 'YwQaCRCxEhNAehPzrCzz9vTknD9ezKWf3F6amvDctMEmzkCe3fTGr23hAEtDmwyH'  // 동일한 Secret 사용
 };
 
