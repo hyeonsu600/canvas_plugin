@@ -1,28 +1,19 @@
-from rest_framework.views import APIView
+from rest_framework import generics
+from .models import UploadedImage
+from .serializers import UploadedImageSerializer
 from rest_framework.response import Response
-from rest_framework import status
-from .models import UploadedFile
-from .serializers import UploadedFileSerializer
-import pytesseract
+from rest_framework.parsers import MultiPartParser, FormParser
 from PIL import Image
-import os
+import pytesseract
 
-class FileUploadOCRView(APIView):
-    def post(self, request):
-        serializer = UploadedFileSerializer(data=request.data)
-        if serializer.is_valid():
-            file_instance = serializer.save()
-            file_path = file_instance.file.path
-            extracted_text = self.perform_ocr(file_path)
-            file_instance.extracted_text = extracted_text
-            file_instance.save()
-            return Response(UploadedFileSerializer(file_instance).data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class UploadedImageView(generics.ListCreateAPIView):
+    queryset = UploadedImage.objects.all()
+    serializer_class = UploadedImageSerializer
+    parser_classes = [MultiPartParser, FormParser]
 
-    def perform_ocr(self, path):
-        try:
-            image = Image.open(path)
-            text = pytesseract.image_to_string(image, lang='eng+kor')  # 한국어 + 영어 OCR
-            return text.strip()
-        except Exception as e:
-            return f"[OCR Failed]: {str(e)}"
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        image = Image.open(instance.image.path)
+        text = pytesseract.image_to_string(image, lang='eng+kor')
+        instance.recognized_text = text
+        instance.save()

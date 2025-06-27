@@ -1,12 +1,9 @@
 from django.test import TestCase
-from .models import Feedback
+from .models import Video, Script
+from django.core.files.uploadedfile import SimpleUploadedFile
 
-class FeedbackModelTest(TestCase):
-    def test_create_feedback(self):
-        fb = Feedback.objects.create(
-            student_id="s001",
-            course_id="c001",
-            question="강의는 어땠나요?",
-            answer="좋았어요!"
-        )
-        self.assertEqual(fb.student_id, "s001")
+class ScriptModelTest(TestCase):
+    def test_script_create(self):
+        video = Video.objects.create(title="test", video_file=SimpleUploadedFile("test.mp4", b"video"))
+        script = Script.objects.create(video=video, start_time=0.0, end_time=1.5, text="안녕하세요")
+        self.assertEqual(script.text, "안녕하세요")

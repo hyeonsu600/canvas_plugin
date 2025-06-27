@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # 'django_extensions',
     #local apps
     'lms_plugin',
+    'lms_plugin.video_edit'
 ]
 
 MIDDLEWARE = [
