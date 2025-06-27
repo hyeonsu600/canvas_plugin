@@ -7,14 +7,14 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@layer utilities {
+/* @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */
 
-@layer base {
-  :root {
+  /* @layer base {
+    :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -83,7 +83,7 @@ body {
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
+} */
 
 /* Tailwind @apply 지시어도 임시 비활성화 */
 /*
