@@ -14,10 +14,10 @@ const nextConfig = {
       {
         source: '/:path*',
         headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: 'frame-ancestors https://lms.kimhaksa.com',
-          },
+                      {
+              key: 'Content-Security-Policy',
+              value: "frame-ancestors 'self' https://lms.kimhaksa.com;",
+            },
         ],
       },
     ];

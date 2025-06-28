@@ -26,7 +26,7 @@ app.prepare().then(() => {
   createServer((req, res) => {
     // Canvas iframe에서 로드될 수 있도록 헤더 설정
     res.removeHeader('X-Frame-Options');
-    res.setHeader('Content-Security-Policy', 'frame-ancestors https://lms.kimhaksa.com');
+    res.setHeader('Content-Security-Policy', "frame-ancestors 'self' https://lms.kimhaksa.com;");
     
     const parsedUrl = parse(req.url, true);
     handle(req, res, parsedUrl);
