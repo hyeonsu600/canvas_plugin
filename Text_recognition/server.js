@@ -24,9 +24,7 @@ const port = process.env.PORT || 3004;
 
 app.prepare().then(() => {
   createServer((req, res) => {
-    // Canvas iframe에서 로드될 수 있도록 헤더 설정
-    res.removeHeader('X-Frame-Options');
-    res.setHeader('Content-Security-Policy', "frame-ancestors 'self' https://lms.kimhaksa.com;");
+    // 헤더 설정은 next.config.mjs에서 처리
     
     const parsedUrl = parse(req.url, true);
     handle(req, res, parsedUrl);
