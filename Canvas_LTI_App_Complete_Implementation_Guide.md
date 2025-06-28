@@ -378,14 +378,75 @@ export default function PDFLogApp() {
 **문제**: `.env.local` 파일이 로드되지 않음
 **해결**: `server.js`에서 직접 환경변수 설정
 
+#### 5. Tailwind CSS 파싱 오류 (PDF_Log 사례)
+**문제**: 서버 환경에서 Tailwind CSS 지시어 파싱 실패
+```
+Module parse failed: Unexpected character '@' (1:0)
+> @tailwind base;
+| @tailwind components;
+| @tailwind utilities;
+```
+
+**원인**: Next.js 서버 환경에서 PostCSS/Tailwind 설정 충돌
+
+**해결책**: app/globals.css에서 모든 Tailwind 지시어 임시 주석 처리
+```css
+/* Tailwind 임시 비활성화 - 서버 오류 해결용 */
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* @layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} */
+
+/* @layer base {
+  :root {
+    --background: 0 0% 100%;
+    // ... CSS 변수들
+  }
+} */
+
+/* 기본 스타일로 대체 */
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+```
+
+**추가 문제**: `@layer` 지시어 충돌
+```
+`@layer utilities` is used but no matching `@tailwind utilities` directive is present.
+```
+**해결**: 모든 `@layer` 구문도 함께 주석 처리
+
+**단계별 해결 과정**:
+1. **오류 확인**: `pm2 logs [app-name]`으로 Tailwind 파싱 오류 확인
+2. **로컬 수정**: app/globals.css에서 @tailwind, @layer 지시어 주석 처리
+3. **Git 푸시**: 변경사항을 서버에 반영
+4. **서버 적용**: `git pull && pm2 restart [app-name]`
+5. **테스트**: `curl http://localhost:[port]`로 정상 응답 확인
+
+**임시 해결책 참고사항**:
+- 이 방법은 Tailwind 스타일링이 비활성화되므로 기본 CSS로만 동작
+- 프로덕션에서는 Tailwind 설정을 올바르게 구성하는 것이 권장됨
+- CSS 변수는 유지되므로 기본적인 테마 시스템은 작동
+
 ### 네트워크 설정
 
 #### Nginx Proxy Manager 설정
-- **Forward Hostname**: `192.168.219.111` (서버 IP)
+- **Forward Hostname**: `172.17.0.1` (gateway) 	
 - **Forward Port**: `3002` (앱별로 변경)
 - **SSL Certificate**: Let's Encrypt 자동
 
-#### Canvas 개발자 키 설정
+#### Canvas 개발자 키 설정 (Manual Entry 방식)
+- **Method**: Manual Entry (수동 항목) 선택
 - **Target Link URI**: `https://test1.kimhaksa.com/api/lti/launch`
 - **OpenID Connect Initiation URL**: `https://test1.kimhaksa.com/api/lti/login`
 - **Public JWK URL**: `https://test1.kimhaksa.com/api/lti/jwks`
@@ -395,7 +456,7 @@ export default function PDFLogApp() {
 
 ## 🔄 다른 앱에 적용하기
 
-### PDF_Log 앱 구현 예시
+### PDF_Log 앱 구현 예시 (실제 구현 완료)
 
 #### 1. 기본 설정
 ```bash
@@ -403,44 +464,73 @@ export default function PDFLogApp() {
 mkdir PDF_Log
 cd PDF_Log
 npm init -y
-npm install next react react-dom jsonwebtoken jwks-rsa
+npm install next react react-dom jsonwebtoken jwks-rsa node-jose
 
 # 2. 포트 변경 (server.js에서)
 const port = process.env.PORT || 3003;  // Feedback: 3002, PDF_Log: 3003
 
 # 3. 도메인 변경
-process.env.TOOL_URL = 'https://pdflog.kimhaksa.com';
+process.env.TOOL_URL = 'https://test2.kimhaksa.com';
+process.env.LTI_CLIENT_ID = '10000000000005';  // PDF_Log 전용 Client ID
 ```
 
 #### 2. 앱별 특화 구현
 ```javascript
-// pages/api/pdf-log/documents.js - PDF 관련 API
-// pages/index.js - PDF 로그 UI 구현
-// 실제 PDF 처리 로직 추가
+// PDF_Log는 기존 App Router 구조 유지
+// app/page.tsx - 기존 PDF_Log 앱 UI
+// pages/api/lti/ - LTI 연동 API만 추가
+// Pages Router와 App Router 혼용 (LTI는 Pages, 메인 앱은 App)
 ```
 
-#### 3. Canvas 설정
-- 새로운 Developer Key 생성
-- URL을 `https://pdflog.kimhaksa.com/*`로 설정
-- 새로운 Client ID, Secret 사용
+#### 3. 중요: Tailwind CSS 문제 해결
+```bash
+# PDF_Log에서 발생한 Tailwind 파싱 오류 해결
+# app/globals.css에서 @tailwind 지시어 주석 처리 필요
+```
 
-### Text_recognition 앱 (포트: 3004)
+#### 4. Canvas 설정
+- 새로운 Developer Key 생성
+- **Method**: Manual Entry (수동 항목) 선택
+- **Client ID**: `10000000000005`
+- **Target Link URI**: `https://test2.kimhaksa.com/api/lti/launch`
+- **Login URL**: `https://test2.kimhaksa.com/api/lti/login`
+- **JWKS URL**: `https://test2.kimhaksa.com/api/lti/jwks`
+
+### Text_recognition 앱 (포트: 3004) - 구현 완료 ✅
 ```bash
 mkdir Text_recognition
 cd Text_recognition
-# 위와 동일한 과정, 포트만 3004로 변경
-# API: /api/text-recognition/images
-# 도메인: https://textrecog.kimhaksa.com
+# PDF_Log와 동일한 과정, 포트만 3004로 변경
+# Client ID: 10000000000006
+# 도메인: https://test3.kimhaksa.com
+# Tailwind CSS 문제 사전 해결 완료
 ```
 
-### Video_edit 앱 (포트: 3005)
+#### Canvas 설정 (Text_recognition)
+- 새로운 Developer Key 생성
+- **Method**: Manual Entry (수동 항목) 선택
+- **Client ID**: `10000000000006`
+- **Target Link URI**: `https://test3.kimhaksa.com/api/lti/launch`
+- **Login URL**: `https://test3.kimhaksa.com/api/lti/login`
+- **JWKS URL**: `https://test3.kimhaksa.com/api/lti/jwks`
+
+### Video_edit 앱 (포트: 3005) - 예정
 ```bash
 mkdir Video_edit
 cd Video_edit
-# 위와 동일한 과정, 포트만 3005로 변경
-# API: /api/video-edit/projects
-# 도메인: https://videoedit.kimhaksa.com
+# PDF_Log와 동일한 과정, 포트만 3005로 변경
+# Client ID: 10000000000007
+# 도메인: https://test4.kimhaksa.com
+# Tailwind CSS 문제 사전 해결 필요
 ```
+
+#### Canvas 설정 (Video_edit) - 예정
+- 새로운 Developer Key 생성
+- **Method**: Manual Entry (수동 항목) 선택
+- **Client ID**: `10000000000007`
+- **Target Link URI**: `https://test4.kimhaksa.com/api/lti/launch`
+- **Login URL**: `https://test4.kimhaksa.com/api/lti/login`
+- **JWKS URL**: `https://test4.kimhaksa.com/api/lti/jwks`
 
 ---
 
