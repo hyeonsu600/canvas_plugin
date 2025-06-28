@@ -25,8 +25,8 @@ const port = process.env.PORT || 3004;
 app.prepare().then(() => {
   createServer((req, res) => {
     // Canvas iframe에서 로드될 수 있도록 헤더 설정
-    res.setHeader('X-Frame-Options', 'ALLOWALL');
-    res.setHeader('Content-Security-Policy', 'frame-ancestors *');
+    res.removeHeader('X-Frame-Options');
+    res.setHeader('Content-Security-Policy', 'frame-ancestors https://lms.kimhaksa.com');
     
     const parsedUrl = parse(req.url, true);
     handle(req, res, parsedUrl);
